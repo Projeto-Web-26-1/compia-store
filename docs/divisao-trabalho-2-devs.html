@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Divisão de Trabalho para 2 Desenvolvedores — COMPIA</title>
+    <style>
+      :root {
+        --navy: #101b2d;
+        --blue: #1f68e5;
+        --blue-soft: #eaf1ff;
+        --green: #2b8768;
+        --green-soft: #e8f5f0;
+        --lime: #b9ed63;
+        --ink: #172033;
+        --muted: #5d6878;
+        --line: #dce3e8;
+        --surface: #f5f7f9;
+        --white: #fff;
+      }
+
+      @page {
+        size: A4;
+        margin: 16mm;
+      }
+
+      * { box-sizing: border-box; }
+
+      html {
+        background: #e9edf2;
+        color: var(--ink);
+        font-family: Inter, Arial, Helvetica, sans-serif;
+        font-size: 10pt;
+        line-height: 1.45;
+      }
+
+      body {
+        width: 210mm;
+        margin: 0 auto;
+        background: white;
+      }
+
+      h1, h2, h3, p { margin-top: 0; }
+      h1, h2, h3 { color: var(--navy); }
+
+      .header {
+        position: relative;
+        overflow: hidden;
+        margin: -16mm -16mm 12mm;
+        padding: 22mm 16mm 18mm;
+        background: linear-gradient(140deg, #0b1424, #17385e);
+        color: white;
+      }
+
+      .header::after {
+        position: absolute;
+        top: -34mm;
+        right: -28mm;
+        width: 95mm;
+        height: 95mm;
+        border: 10mm solid rgba(255,255,255,.045);
+        border-radius: 50%;
+        box-shadow: 0 0 0 10mm rgba(255,255,255,.025);
+        content: "";
+      }
+
+      .brand {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 20mm;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 36px;
+        height: 36px;
+        place-items: center;
+        border-radius: 10px 3px 10px 3px;
+        background: var(--lime);
+        color: var(--navy);
+        font-size: 18px;
+        font-weight: 900;
+      }
+
+      .brand strong {
+        font-size: 14px;
+        letter-spacing: .13em;
+      }
+
+      .header-content {
+        position: relative;
+        z-index: 1;
+      }
+
+      .eyebrow {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--blue);
+        font-size: 8pt;
+        font-weight: 900;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+      }
+
+      .header .eyebrow { color: var(--lime); }
+
+      .header h1 {
+        max-width: 150mm;
+        margin-bottom: 12px;
+        color: white;
+        font-size: 31pt;
+        line-height: 1;
+        letter-spacing: -.04em;
+      }
+
+      .header p {
+        max-width: 145mm;
+        margin-bottom: 0;
+        color: #c5d0df;
+        font-size: 12pt;
+      }
+
+      .intro {
+        margin-bottom: 9mm;
+      }
+
+      .intro h2,
+      .section-title h2 {
+        margin-bottom: 7px;
+        font-size: 20pt;
+        letter-spacing: -.03em;
+      }
+
+      .intro p,
+      .section-title p {
+        max-width: 165mm;
+        margin-bottom: 0;
+        color: var(--muted);
+      }
+
+      .dev-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5mm;
+        margin-bottom: 10mm;
+      }
+
+      .dev-card {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 4mm;
+        break-inside: avoid;
+      }
+
+      .dev-card__header {
+        padding: 5mm;
+        background: var(--blue-soft);
+      }
+
+      .dev-card--green .dev-card__header { background: var(--green-soft); }
+
+      .dev-card__header span {
+        display: block;
+        margin-bottom: 2px;
+        color: var(--blue);
+        font-size: 8pt;
+        font-weight: 900;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+      }
+
+      .dev-card--green .dev-card__header span { color: var(--green); }
+
+      .dev-card__header h2 {
+        margin-bottom: 3px;
+        font-size: 16pt;
+      }
+
+      .dev-card__header p {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 9pt;
+      }
+
+      .dev-card__body { padding: 5mm; }
+
+      h3 {
+        margin-bottom: 2.5mm;
+        color: var(--blue);
+        font-size: 8pt;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+      }
+
+      .dev-card--green h3 { color: var(--green); }
+
+      ul {
+        margin: 0;
+        padding-left: 4.5mm;
+      }
+
+      li {
+        margin-bottom: 1.5mm;
+        color: #354155;
+        font-size: 9pt;
+      }
+
+      li:last-child { margin-bottom: 0; }
+
+      .flow {
+        margin-bottom: 10mm;
+        padding: 6mm;
+        border-radius: 4mm;
+        background: var(--navy);
+        color: white;
+        break-inside: avoid;
+      }
+
+      .flow h2 {
+        margin-bottom: 4mm;
+        color: white;
+        font-size: 15pt;
+      }
+
+      .flow-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4mm;
+      }
+
+      .flow-item {
+        padding: 4mm;
+        border: 1px solid rgba(255,255,255,.13);
+        border-radius: 3mm;
+        background: rgba(255,255,255,.05);
+      }
+
+      .flow-item span {
+        display: block;
+        margin-bottom: 2px;
+        color: var(--lime);
+        font-size: 7.5pt;
+        font-weight: 900;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+      }
+
+      .flow-item strong { font-size: 10pt; }
+
+      .page-break { page-break-before: always; }
+
+      .section-title {
+        margin-bottom: 7mm;
+      }
+
+      .rounds {
+        display: grid;
+        gap: 4mm;
+        margin-bottom: 10mm;
+      }
+
+      .round {
+        display: grid;
+        padding: 5mm;
+        border: 1px solid var(--line);
+        border-radius: 4mm;
+        grid-template-columns: 15mm 1fr 1fr;
+        gap: 5mm;
+        break-inside: avoid;
+      }
+
+      .round-number {
+        display: grid;
+        width: 13mm;
+        height: 13mm;
+        place-items: center;
+        border-radius: 3mm;
+        background: var(--navy);
+        color: white;
+        font-size: 12pt;
+        font-weight: 900;
+      }
+
+      .round h3 { margin-bottom: 2mm; }
+      .round p { margin-bottom: 0; color: var(--muted); font-size: 8.7pt; }
+      .round strong { display: block; margin-bottom: 1.5mm; color: var(--navy); font-size: 9.5pt; }
+
+      .preparation {
+        margin-bottom: 8mm;
+        padding: 5mm;
+        border-left: 4px solid var(--blue);
+        border-radius: 0 3mm 3mm 0;
+        background: var(--blue-soft);
+        break-inside: avoid;
+      }
+
+      .preparation h2 { margin-bottom: 3mm; font-size: 14pt; }
+      .preparation p { margin-bottom: 3mm; color: #3d5274; }
+      .preparation ul { columns: 2; column-gap: 9mm; }
+
+      .ownership {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5mm;
+        margin-bottom: 9mm;
+      }
+
+      .code-card {
+        padding: 5mm;
+        border: 1px solid var(--line);
+        border-radius: 4mm;
+        break-inside: avoid;
+      }
+
+      pre {
+        margin: 0;
+        color: #354155;
+        font-family: "DejaVu Sans Mono", Consolas, monospace;
+        font-size: 7.6pt;
+        line-height: 1.65;
+        white-space: pre-wrap;
+      }
+
+      .warning {
+        margin-bottom: 9mm;
+        padding: 5mm;
+        border: 1px solid #f1d69d;
+        border-radius: 4mm;
+        background: #fff8e8;
+        break-inside: avoid;
+      }
+
+      .warning h2 { margin-bottom: 3mm; font-size: 14pt; }
+      .warning p { margin-bottom: 3mm; color: #695329; }
+
+      .git-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5mm;
+      }
+
+      .git-card {
+        padding: 5mm;
+        border-radius: 4mm;
+        background: var(--surface);
+        break-inside: avoid;
+      }
+
+      .git-card h2 { margin-bottom: 3mm; font-size: 14pt; }
+
+      .summary {
+        margin-top: 9mm;
+        padding: 6mm;
+        border-radius: 4mm;
+        background: var(--navy);
+        color: white;
+        break-inside: avoid;
+      }
+
+      .summary h2 { margin-bottom: 4mm; color: white; font-size: 15pt; }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5mm;
+      }
+
+      .summary-grid div {
+        padding: 4mm;
+        border-radius: 3mm;
+        background: rgba(255,255,255,.06);
+      }
+
+      .summary-grid span {
+        display: block;
+        margin-bottom: 2mm;
+        color: var(--lime);
+        font-size: 8pt;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .summary-grid strong { font-size: 10pt; line-height: 1.5; }
+
+      @media print {
+        html, body { width: auto; background: white; }
+        body { margin: 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="brand"><span class="brand-mark">C</span><strong>COMPIA</strong></div>
+      <div class="header-content">
+        <span class="eyebrow">Organização do desenvolvimento</span>
+        <h1>Divisão de Trabalho para 2 Desenvolvedores</h1>
+        <p>Estratégia de execução paralela para a loja virtual, considerando a estrutura inicial do projeto já concluída.</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro">
+        <span class="eyebrow">Estratégia recomendada</span>
+        <h2>Divisão por fluxos verticais</h2>
+        <p>Cada desenvolvedor assume um fluxo completo, incluindo entidades, persistência, interface e testes. Isso reduz dependências, bloqueios e conflitos de integração.</p>
+      </section>
+
+      <section class="dev-grid">
+        <article class="dev-card">
+          <div class="dev-card__header">
+            <span>Desenvolvedor 1</span>
+            <h2>Catálogo e administração</h2>
+            <p>Produtos, descoberta e gestão do catálogo.</p>
+          </div>
+          <div class="dev-card__body">
+            <h3>Escopo principal</h3>
+            <ul>
+              <li>Product, Category e Tag.</li>
+              <li>Repositórios e dados iniciais do catálogo.</li>
+              <li>Página inicial, catálogo e detalhes do produto.</li>
+              <li>Busca, filtros e ordenação.</li>
+              <li>CRUD administrativo de produtos e categorias.</li>
+              <li>Controle de estoque e produtos ativos.</li>
+              <li>Testes do catálogo e do CRUD.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="dev-card dev-card--green">
+          <div class="dev-card__header">
+            <span>Desenvolvedor 2</span>
+            <h2>Compra e cliente</h2>
+            <p>Carrinho, checkout e acompanhamento da compra.</p>
+          </div>
+          <div class="dev-card__body">
+            <h3>Escopo principal</h3>
+            <ul>
+              <li>User, Address, Cart e CartItem.</li>
+              <li>Order, OrderItem, Payment e Delivery.</li>
+              <li>Repositórios de usuário, carrinho e pedidos.</li>
+              <li>Carrinho e checkout.</li>
+              <li>Pagamento e frete simulados.</li>
+              <li>Login, área do cliente e downloads.</li>
+              <li>Administração de pedidos e clientes.</li>
+            </ul>
+          </div>
+        </article>
+      </section>
+
+      <section class="flow">
+        <h2>Fluxos independentes</h2>
+        <div class="flow-grid">
+          <div class="flow-item"><span>Dev 1</span><strong>Catálogo → Produtos → Estoque → Administração do catálogo</strong></div>
+          <div class="flow-item"><span>Dev 2</span><strong>Cliente → Carrinho → Checkout → Pedidos</strong></div>
+        </div>
+      </section>
+
+      <section class="preparation">
+        <h2>Preparação conjunta antes da divisão</h2>
+        <p>Os contratos compartilhados devem ser definidos e integrados à branch principal antes das implementações paralelas.</p>
+        <ul>
+          <li>Estrutura das entidades.</li>
+          <li>IDs e relacionamentos.</li>
+          <li>Interfaces dos repositórios.</li>
+          <li>Chaves do localStorage.</li>
+          <li>Status de pedido e pagamento.</li>
+          <li>Formato dos dados iniciais.</li>
+          <li>Regras de estoque.</li>
+          <li>Contrato produto–carrinho–pedido.</li>
+        </ul>
+      </section>
+
+      <section class="section-title page-break">
+        <span class="eyebrow">Execução</span>
+        <h2>Rodadas de trabalho paralelo</h2>
+        <p>Cada rodada entrega partes integráveis e reduz o tempo entre implementação e revisão.</p>
+      </section>
+
+      <section class="rounds">
+        <article class="round">
+          <span class="round-number">1</span>
+          <div><h3>Dev 1</h3><strong>Domínio e catálogo</strong><p>Product, Category, Tag, repositórios, seed, catálogo e detalhes do produto.</p></div>
+          <div><h3>Dev 2</h3><strong>Domínio e conta</strong><p>User, Address, Cart, repositórios, estado do carrinho, login e área básica do cliente.</p></div>
+        </article>
+
+        <article class="round">
+          <span class="round-number">2</span>
+          <div><h3>Dev 1</h3><strong>Administração do catálogo</strong><p>Busca, filtros, ordenação, CRUD de produtos, categorias e estoque.</p></div>
+          <div><h3>Dev 2</h3><strong>Compra</strong><p>Pedido, pagamento, entrega, checkout, frete simulado e geração do pedido.</p></div>
+        </article>
+
+        <article class="round">
+          <span class="round-number">3</span>
+          <div><h3>Dev 1</h3><strong>Dashboard</strong><p>Indicadores administrativos, produtos com estoque baixo e refinamento da gestão.</p></div>
+          <div><h3>Dev 2</h3><strong>Pós-compra</strong><p>Histórico, detalhes, downloads e administração de pedidos e clientes.</p></div>
+        </article>
+
+        <article class="round">
+          <span class="round-number">4</span>
+          <div><h3>Dev 1</h3><strong>Qualidade visual</strong><p>Responsividade, acessibilidade e revisão dos fluxos de catálogo e administração.</p></div>
+          <div><h3>Dev 2</h3><strong>Qualidade funcional</strong><p>Testes de carrinho, checkout, pedidos, persistência e cenários de estoque.</p></div>
+        </article>
+      </section>
+
+      <section class="section-title">
+        <span class="eyebrow">Organização do código</span>
+        <h2>Propriedade principal dos arquivos</h2>
+        <p>A propriedade indica quem conduz as alterações. Revisões cruzadas continuam recomendadas.</p>
+      </section>
+
+      <section class="ownership">
+        <article class="code-card">
+          <h3>Dev 1</h3>
+          <pre>src/entities/product.ts
+src/entities/category.ts
+src/entities/tag.ts
+src/repositories/product-repository.ts
+src/repositories/category-repository.ts
+src/components/products/
+src/app/(store)/produtos/
+src/app/admin/produtos/
+src/app/admin/categorias/</pre>
+        </article>
+
+        <article class="code-card">
+          <h3>Dev 2</h3>
+          <pre>src/entities/user.ts
+src/entities/address.ts
+src/entities/cart.ts
+src/entities/order.ts
+src/entities/payment.ts
+src/entities/delivery.ts
+src/repositories/cart-repository.ts
+src/repositories/order-repository.ts
+src/components/cart/
+src/components/checkout/</pre>
+        </article>
+      </section>
+
+      <section class="warning">
+        <h2>Arquivos que exigem coordenação</h2>
+        <p>Evitar edição simultânea para reduzir conflitos de merge:</p>
+        <pre>package.json
+src/app/globals.css
+src/app/layout.tsx
+src/storage/local-storage.ts
+src/storage/seed.ts</pre>
+      </section>
+
+      <section class="git-grid">
+        <article class="git-card">
+          <h2>Fluxo Git</h2>
+          <ul>
+            <li>Uma branch por funcionalidade.</li>
+            <li>Pull requests pequenos.</li>
+            <li>Atualização frequente com a principal.</li>
+            <li>Contratos integrados antes dos consumidores.</li>
+            <li>Revisão cruzada entre os desenvolvedores.</li>
+          </ul>
+        </article>
+        <article class="git-card">
+          <h2>Exemplos de branches</h2>
+          <pre>feature/catalog-domain
+feature/product-catalog
+feature/admin-products
+feature/cart-domain
+feature/checkout
+feature/customer-orders</pre>
+        </article>
+      </section>
+
+      <section class="summary">
+        <h2>Resumo da divisão</h2>
+        <div class="summary-grid">
+          <div><span>Desenvolvedor 1</span><strong>Catálogo, produtos, estoque e administração do catálogo.</strong></div>
+          <div><span>Desenvolvedor 2</span><strong>Cliente, carrinho, checkout, pagamento e pedidos.</strong></div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

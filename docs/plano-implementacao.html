@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plano de Implementação — COMPIA Editora</title>
+    <style>
+      :root {
+        --navy: #101b2d;
+        --blue: #1f68e5;
+        --blue-soft: #eaf1ff;
+        --green: #2b8768;
+        --green-soft: #e8f5f0;
+        --lime: #b9ed63;
+        --ink: #172033;
+        --muted: #5d6878;
+        --line: #dce3e8;
+        --surface: #f5f7f9;
+        --white: #fff;
+      }
+
+      @page {
+        size: A4;
+        margin: 16mm 15mm 17mm;
+      }
+
+      * { box-sizing: border-box; }
+
+      html {
+        background: #e9edf2;
+        color: var(--ink);
+        font-family: Inter, Arial, Helvetica, sans-serif;
+        font-size: 10.5pt;
+        line-height: 1.45;
+      }
+
+      body {
+        width: 210mm;
+        margin: 0 auto;
+        background: var(--white);
+      }
+
+      h1, h2, h3, p { margin-top: 0; }
+      h1, h2, h3 { color: var(--navy); }
+
+      .cover {
+        position: relative;
+        display: flex;
+        height: 263mm;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 25mm 19mm 18mm;
+        background:
+          radial-gradient(circle at 86% 15%, rgba(92, 116, 255, .55), transparent 24%),
+          linear-gradient(145deg, #0b1424 0%, #132846 60%, #17446b 100%);
+        color: var(--white);
+        page-break-after: always;
+      }
+
+      .cover::before {
+        position: absolute;
+        top: -42mm;
+        right: -34mm;
+        width: 125mm;
+        height: 125mm;
+        border: 12mm solid rgba(255,255,255,.045);
+        border-radius: 50%;
+        box-shadow: 0 0 0 12mm rgba(255,255,255,.025);
+        content: "";
+      }
+
+      .brand {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        place-items: center;
+        border-radius: 11px 3px 11px 3px;
+        background: var(--lime);
+        color: var(--navy);
+        font-size: 20px;
+        font-weight: 900;
+      }
+
+      .brand strong {
+        display: block;
+        font-size: 15px;
+        letter-spacing: .13em;
+      }
+
+      .brand small {
+        display: block;
+        margin-top: 2px;
+        color: #aebbd0;
+        font-size: 8px;
+      }
+
+      .cover-main {
+        position: relative;
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+
+      .cover-kicker {
+        display: inline-block;
+        margin-bottom: 16px;
+        color: var(--lime);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+      }
+
+      .cover h1 {
+        max-width: 145mm;
+        margin-bottom: 20px;
+        color: var(--white);
+        font-size: 40pt;
+        line-height: .98;
+        letter-spacing: -.045em;
+      }
+
+      .cover-main p {
+        max-width: 120mm;
+        margin: 0;
+        color: #c6d1df;
+        font-size: 14pt;
+        line-height: 1.55;
+      }
+
+      .cover-footer {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255,255,255,.16);
+        color: #9eacbf;
+        font-size: 8.5pt;
+      }
+
+      .cover-status {
+        padding: 7px 11px;
+        border-radius: 20px;
+        background: rgba(185,237,99,.13);
+        color: var(--lime);
+        font-weight: 800;
+      }
+
+      .content {
+        padding: 0;
+      }
+
+      .document-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 13mm;
+        padding-bottom: 5mm;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .document-header strong {
+        color: var(--navy);
+        font-size: 11pt;
+        letter-spacing: .08em;
+      }
+
+      .document-header span {
+        color: var(--muted);
+        font-size: 8.5pt;
+      }
+
+      .intro {
+        margin-bottom: 11mm;
+      }
+
+      .eyebrow {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--blue);
+        font-size: 8pt;
+        font-weight: 900;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+      }
+
+      .intro h2 {
+        margin-bottom: 10px;
+        font-size: 25pt;
+        line-height: 1.05;
+        letter-spacing: -.035em;
+      }
+
+      .intro p {
+        max-width: 160mm;
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 11pt;
+      }
+
+      .legend {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10mm;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 9px;
+        border-radius: 20px;
+        background: var(--surface);
+        color: var(--muted);
+        font-size: 8pt;
+        font-weight: 700;
+      }
+
+      .pill::before {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #9aa6b6;
+        content: "";
+      }
+
+      .pill--done {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+
+      .pill--done::before { background: var(--green); }
+
+      .roadmap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4mm;
+        margin-bottom: 10mm;
+      }
+
+      .roadmap-item {
+        display: grid;
+        min-height: 17mm;
+        align-items: center;
+        padding: 3mm 4mm;
+        border: 1px solid var(--line);
+        border-radius: 3mm;
+        grid-template-columns: 10mm 1fr auto;
+        gap: 3mm;
+      }
+
+      .roadmap-item > strong {
+        display: grid;
+        width: 9mm;
+        height: 9mm;
+        place-items: center;
+        border-radius: 2.5mm;
+        background: var(--blue-soft);
+        color: var(--blue);
+        font-size: 8pt;
+      }
+
+      .roadmap-item div span {
+        display: block;
+        color: var(--navy);
+        font-size: 9pt;
+        font-weight: 800;
+      }
+
+      .roadmap-item div small {
+        color: var(--muted);
+        font-size: 7.5pt;
+      }
+
+      .roadmap-item em {
+        color: #8a95a5;
+        font-size: 7pt;
+        font-style: normal;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .roadmap-item--done {
+        border-color: #b8ddcd;
+        background: var(--green-soft);
+      }
+
+      .roadmap-item--done > strong {
+        background: var(--green);
+        color: white;
+      }
+
+      .roadmap-item--done em { color: var(--green); }
+
+      .stage {
+        margin-bottom: 7mm;
+        padding: 5.5mm;
+        border: 1px solid var(--line);
+        border-radius: 4mm;
+        break-inside: avoid;
+      }
+
+      .stage--done {
+        border-color: #acd8c5;
+        background: linear-gradient(135deg, #f2fbf7, white 65%);
+      }
+
+      .stage-header {
+        display: grid;
+        align-items: start;
+        grid-template-columns: 13mm 1fr auto;
+        gap: 4mm;
+      }
+
+      .stage-number {
+        display: grid;
+        width: 12mm;
+        height: 12mm;
+        place-items: center;
+        border-radius: 3mm;
+        background: var(--navy);
+        color: var(--white);
+        font-size: 12pt;
+        font-weight: 900;
+      }
+
+      .stage--done .stage-number { background: var(--green); }
+
+      .stage-title h2 {
+        margin-bottom: 3px;
+        font-size: 15pt;
+        line-height: 1.1;
+      }
+
+      .stage-title p {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 9pt;
+      }
+
+      .status {
+        padding: 5px 8px;
+        border-radius: 20px;
+        background: var(--surface);
+        color: #738093;
+        font-size: 7pt;
+        font-weight: 900;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .status--done {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+
+      .stage-body {
+        display: grid;
+        margin-top: 5mm;
+        padding-top: 4mm;
+        border-top: 1px solid var(--line);
+        grid-template-columns: 1fr 1fr;
+        gap: 7mm;
+      }
+
+      .stage-body h3 {
+        margin-bottom: 2.5mm;
+        color: var(--blue);
+        font-size: 8pt;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 4.5mm;
+      }
+
+      li {
+        margin-bottom: 1.5mm;
+        color: #354155;
+        font-size: 9pt;
+      }
+
+      li:last-child { margin-bottom: 0; }
+
+      .criteria {
+        padding: 3.5mm 4mm;
+        border-left: 3px solid var(--blue);
+        border-radius: 0 2.5mm 2.5mm 0;
+        background: var(--blue-soft);
+      }
+
+      .criteria p {
+        margin: 0;
+        color: #344868;
+        font-size: 8.7pt;
+      }
+
+      .page-break { page-break-before: always; }
+
+      .closing {
+        margin-top: 10mm;
+        padding: 7mm;
+        border-radius: 4mm;
+        background: var(--navy);
+        color: white;
+        break-inside: avoid;
+      }
+
+      .closing h2 {
+        margin-bottom: 3mm;
+        color: white;
+        font-size: 17pt;
+      }
+
+      .closing p {
+        margin-bottom: 0;
+        color: #c0cbda;
+      }
+
+      .closing strong { color: var(--lime); }
+
+      @media print {
+        html, body {
+          width: auto;
+          background: white;
+        }
+
+        body { margin: 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="cover">
+      <div class="brand">
+        <span class="brand-mark">C</span>
+        <div><strong>COMPIA</strong><small>Editora de Inteligência Artificial</small></div>
+      </div>
+      <div class="cover-main">
+        <span class="cover-kicker">Plano de desenvolvimento</span>
+        <h1>Plano de Implementação da Loja Virtual</h1>
+        <p>Organização das dez etapas necessárias para construir a versão demonstrativa da plataforma.</p>
+      </div>
+      <div class="cover-footer">
+        <div>Versão 1.0<br />Agosto de 2026</div>
+        <span class="cover-status">Etapa 1 concluída</span>
+      </div>
+    </section>
+
+    <main class="content">
+      <header class="document-header">
+        <strong>COMPIA</strong>
+        <span>Plano de implementação · versão mockada</span>
+      </header>
+
+      <section class="intro">
+        <span class="eyebrow">Visão geral</span>
+        <h2>Do esqueleto da aplicação ao deploy</h2>
+        <p>
+          O plano está organizado em ordem de dependência. A aplicação será construída em Next.js,
+          com dados persistidos localmente no navegador e integrações externas simuladas.
+        </p>
+      </section>
+
+      <div class="legend">
+        <span class="pill pill--done">Concluída</span>
+        <span class="pill">A implementar</span>
+      </div>
+
+      <section class="roadmap" aria-label="Resumo das etapas">
+        <div class="roadmap-item roadmap-item--done"><strong>01</strong><div><span>Estrutura do projeto</span><small>Base técnica e navegação</small></div><em>Concluída</em></div>
+        <div class="roadmap-item"><strong>02</strong><div><span>Modelagem dos dados</span><small>Entidades e regras</small></div><em>Pendente</em></div>
+        <div class="roadmap-item"><strong>03</strong><div><span>Persistência local</span><small>Repositórios e seed</small></div><em>Pendente</em></div>
+        <div class="roadmap-item"><strong>04</strong><div><span>Catálogo público</span><small>Busca, filtros e detalhes</small></div><em>Pendente</em></div>
+        <div class="roadmap-item"><strong>05</strong><div><span>Carrinho</span><small>Itens, quantidades e totais</small></div><em>Pendente</em></div>
+        <div class="roadmap-item"><strong>06</strong><div><span>Checkout simulado</span><small>Entrega e pagamento</small></div><em>Pendente</em></div>
+        <div class="roadmap-item"><strong>07</strong><div><span>Área do cliente</span><small>Conta, pedidos e downloads</small></div><em>Pendente</em></div>
+        <div class="roadmap-item"><strong>08</strong><div><span>Painel administrativo</span><small>Catálogo e pedidos</small></div><em>Pendente</em></div>
+        <div class="roadmap-item"><strong>09</strong><div><span>Qualidade da interface</span><small>UX e acessibilidade</small></div><em>Pendente</em></div>
+        <div class="roadmap-item"><strong>10</strong><div><span>Testes e publicação</span><small>Validação e Vercel</small></div><em>Pendente</em></div>
+      </section>
+
+      <section class="stage stage--done">
+        <div class="stage-header">
+          <span class="stage-number">1</span>
+          <div class="stage-title"><h2>Estrutura do projeto</h2><p>Fundação técnica, rotas e identidade visual inicial.</p></div>
+          <span class="status status--done">Concluída</span>
+        </div>
+        <div class="stage-body">
+          <div>
+            <h3>Entregas</h3>
+            <ul>
+              <li>Projeto Next.js com React e TypeScript.</li>
+              <li>Estilos globais e layout responsivo.</li>
+              <li>Rotas públicas, administrativas e do cliente.</li>
+              <li>Cabeçalho, rodapé e navegação mobile.</li>
+              <li>Configuração de build e deploy para a Vercel.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Resultado</h3>
+            <div class="criteria"><p>A aplicação compila, possui navegação funcional entre as páginas iniciais e está pronta para receber dados e regras de negócio.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage">
+        <div class="stage-header">
+          <span class="stage-number">2</span>
+          <div class="stage-title"><h2>Modelagem dos dados</h2><p>Definição do domínio que sustentará a aplicação.</p></div>
+          <span class="status">A implementar</span>
+        </div>
+        <div class="stage-body">
+          <div>
+            <h3>Entregas</h3>
+            <ul>
+              <li>Interfaces para Product, Category, Tag e User.</li>
+              <li>Modelos de Address, Cart, CartItem, Order e OrderItem.</li>
+              <li>Modelos de Payment, Delivery, DigitalAsset e AuditLog.</li>
+              <li>Enums para tipos, perfis e status.</li>
+              <li>Validações e regras essenciais do domínio.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Critério de conclusão</h3>
+            <div class="criteria"><p>Todos os fluxos previstos conseguem representar seus dados sem depender de objetos genéricos ou campos indefinidos.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage">
+        <div class="stage-header">
+          <span class="stage-number">3</span>
+          <div class="stage-title"><h2>Persistência local</h2><p>Armazenamento dos dados no navegador.</p></div>
+          <span class="status">A implementar</span>
+        </div>
+        <div class="stage-body">
+          <div>
+            <h3>Entregas</h3>
+            <ul>
+              <li>Adaptador centralizado para localStorage.</li>
+              <li>Repositórios de produtos, usuários, carrinho e pedidos.</li>
+              <li>Dados iniciais para demonstração.</li>
+              <li>Versionamento e migração da estrutura armazenada.</li>
+              <li>Ação para restaurar os dados iniciais.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Critério de conclusão</h3>
+            <div class="criteria"><p>Os dados permanecem após atualizar a página, sem acesso direto ao localStorage dentro dos componentes visuais.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage page-break">
+        <div class="stage-header">
+          <span class="stage-number">4</span>
+          <div class="stage-title"><h2>Catálogo público</h2><p>Experiência de descoberta e consulta dos produtos.</p></div>
+          <span class="status">A implementar</span>
+        </div>
+        <div class="stage-body">
+          <div>
+            <h3>Entregas</h3>
+            <ul>
+              <li>Página inicial alimentada pelos dados locais.</li>
+              <li>Listagem e página de detalhes do produto.</li>
+              <li>Busca por título, autor ou descrição.</li>
+              <li>Filtros por categoria, tipo e faixa de preço.</li>
+              <li>Ordenação e indicação de estoque.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Critério de conclusão</h3>
+            <div class="criteria"><p>O visitante consegue localizar um produto, consultar suas informações e iniciar a inclusão no carrinho.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage">
+        <div class="stage-header">
+          <span class="stage-number">5</span>
+          <div class="stage-title"><h2>Carrinho</h2><p>Seleção de produtos e preparação da compra.</p></div>
+          <span class="status">A implementar</span>
+        </div>
+        <div class="stage-body">
+          <div>
+            <h3>Entregas</h3>
+            <ul>
+              <li>Adicionar e remover produtos.</li>
+              <li>Alterar quantidades e validar estoque.</li>
+              <li>Calcular subtotal e quantidade total.</li>
+              <li>Persistir o carrinho entre sessões.</li>
+              <li>Bloquear produtos indisponíveis ou inativos.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Critério de conclusão</h3>
+            <div class="criteria"><p>O carrinho mantém informações consistentes e encaminha somente itens válidos para o checkout.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage">
+        <div class="stage-header">
+          <span class="stage-number">6</span>
+          <div class="stage-title"><h2>Checkout simulado</h2><p>Identificação, entrega e pagamento demonstrativo.</p></div>
+          <span class="status">A implementar</span>
+        </div>
+        <div class="stage-body">
+          <div>
+            <h3>Entregas</h3>
+            <ul>
+              <li>Formulários de cliente e endereço.</li>
+              <li>Frete simulado por CEP e retirada no local.</li>
+              <li>Pagamento simulado por PIX ou cartão.</li>
+              <li>Revisão e confirmação da compra.</li>
+              <li>Geração do pedido e redução do estoque.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Critério de conclusão</h3>
+            <div class="criteria"><p>Uma compra completa gera um pedido persistido, sem armazenar número completo de cartão ou CVV.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage">
+        <div class="stage-header">
+          <span class="stage-number">7</span>
+          <div class="stage-title"><h2>Área do cliente</h2><p>Consulta das informações relacionadas ao comprador.</p></div>
+          <span class="status">A implementar</span>
+        </div>
+        <div class="stage-body">
+          <div>
+            <h3>Entregas</h3>
+            <ul>
+              <li>Login simulado e usuários de demonstração.</li>
+              <li>Visão geral da conta.</li>
+              <li>Histórico e detalhes dos pedidos.</li>
+              <li>Exibição do status da compra.</li>
+              <li>Biblioteca e links demonstrativos de e-books.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Critério de conclusão</h3>
+            <div class="criteria"><p>O cliente autenticado visualiza apenas seu histórico e os materiais digitais associados às compras aprovadas.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage">
+        <div class="stage-header">
+          <span class="stage-number">8</span>
+          <div class="stage-title"><h2>Painel administrativo</h2><p>Gerenciamento local do catálogo e da operação.</p></div>
+          <span class="status">A implementar</span>
+        </div>
+        <div class="stage-body">
+          <div>
+            <h3>Entregas</h3>
+            <ul>
+              <li>Dashboard com indicadores demonstrativos.</li>
+              <li>CRUD de produtos, categorias e tags.</li>
+              <li>Controle de estoque e produtos ativos.</li>
+              <li>Consulta e atualização dos pedidos.</li>
+              <li>Clientes, perfis e logs de atividade.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Critério de conclusão</h3>
+            <div class="criteria"><p>As alterações administrativas refletem imediatamente na loja do mesmo navegador e ficam registradas localmente.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage">
+        <div class="stage-header">
+          <span class="stage-number">9</span>
+          <div class="stage-title"><h2>Qualidade da interface</h2><p>Refinamento da experiência, consistência e acessibilidade.</p></div>
+          <span class="status">A implementar</span>
+        </div>
+        <div class="stage-body">
+          <div>
+            <h3>Entregas</h3>
+            <ul>
+              <li>Revisão para celular, tablet e desktop.</li>
+              <li>Validação e mensagens nos formulários.</li>
+              <li>Estados de carregamento, vazio e erro.</li>
+              <li>Confirmações para ações destrutivas.</li>
+              <li>Acessibilidade por teclado e semântica HTML.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Critério de conclusão</h3>
+            <div class="criteria"><p>Os fluxos principais são compreensíveis e utilizáveis em diferentes telas, inclusive por navegação via teclado.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage">
+        <div class="stage-header">
+          <span class="stage-number">10</span>
+          <div class="stage-title"><h2>Testes e publicação</h2><p>Validação final e disponibilização da demonstração.</p></div>
+          <span class="status">A implementar</span>
+        </div>
+        <div class="stage-body">
+          <div>
+            <h3>Entregas</h3>
+            <ul>
+              <li>Testes do catálogo, carrinho e checkout.</li>
+              <li>Testes da área do cliente e administração.</li>
+              <li>Validação da persistência após recarregar.</li>
+              <li>Execução de lint, typecheck e build.</li>
+              <li>Deploy e verificação do ambiente na Vercel.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Critério de conclusão</h3>
+            <div class="criteria"><p>A aplicação está publicada, sem erros de build, e todos os fluxos críticos funcionam no ambiente de produção.</p></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
