@@ -1,10 +1,5 @@
 import Link from "next/link";
-
-const topics = [
-  { label: "Inteligencia artificial", count: "12 titulos", tone: "violet" },
-  { label: "Arquitetura de software", count: "8 titulos", tone: "blue" },
-  { label: "Ciberseguranca", count: "6 titulos", tone: "green" },
-];
+import { CatalogCategories } from "@/components/products/catalog-categories";
 
 const benefits = [
   { number: "01", title: "Curadoria especializada", text: "Obras selecionadas para estudantes e profissionais de tecnologia." },
@@ -53,18 +48,7 @@ export default function HomePage() {
           </div>
           <Link className="text-link" href="/produtos">Ver catalogo completo →</Link>
         </div>
-        <div className="topic-grid">
-          {topics.map((topic) => (
-            <Link className={`topic-card topic-card--${topic.tone}`} href="/produtos" key={topic.label}>
-              <span className="topic-card__pattern" aria-hidden="true" />
-              <div>
-                <small>{topic.count}</small>
-                <h3>{topic.label}</h3>
-              </div>
-              <span aria-hidden="true">↗</span>
-            </Link>
-          ))}
-        </div>
+        <CatalogCategories />
       </section>
 
       <section className="section section--muted">
