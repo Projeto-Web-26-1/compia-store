@@ -1,21 +1,19 @@
 "use client";
 
-import React from "react";
 import { useCart } from "@/context/cart-context";
-import { CartItem } from "@/entities/cart";
 
 interface AddToCartButtonProps {
-  product: Omit<CartItem, "quantity">;
+  readonly productId: string;
 }
 
-export function AddToCartButton({ product }: AddToCartButtonProps) {
+export function AddToCartButton({ productId }: AddToCartButtonProps) {
   const { addItem } = useCart();
 
   return (
     <button
       className="button button--primary"
       type="button"
-      onClick={() => addItem(product, 1)}
+      onClick={() => addItem(productId, 1)}
     >
       Adicionar ao carrinho
     </button>

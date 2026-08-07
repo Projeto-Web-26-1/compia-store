@@ -1,67 +1,98 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { CartItem } from "@/entities/cart";
+import { createContext, useContext, useSyncExternalStore, type ReactNode } from "react";
+import { canPurchase } from "@/domain/catalog/product-rules";
+import type { CartItem } from "@/entities/cart";
 import { cartRepository } from "@/repositories/cart-repository";
+import { findProductById } from "@/repositories/product-repository";
 
 interface CartContextData {
-  items: CartItem[];
-  addItem: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
+  items: readonly CartItem[];
+  addItem: (productId: string, quantity?: number) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
-  subtotal: number;
   count: number;
 }
 
-const CartContext = createContext<CartContextData>({} as CartContextData);
+const CartContext = createContext<CartContextData | null>(null);
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+function parseItems(snapshot: string): CartItem[] {
+  try {
+    const value: unknown = JSON.parse(snapshot);
+    return Array.isArray(value) ? (value as CartItem[]) : [];
+  } catch {
+    return [];
+  }
+}
 
-  useEffect(() => {
-    setItems(cartRepository.getItems());
-  }, []);
+export function CartProvider({ children }: { children: ReactNode }) {
+  const snapshot = useSyncExternalStore(
+    cartRepository.subscribe,
+    cartRepository.getSnapshot,
+    cartRepository.getServerSnapshot,
+  );
+  const items = parseItems(snapshot);
 
-  const updateAndSave = (newItems: CartItem[]) => {
-    setItems(newItems);
+  const updateAndSave = (newItems: readonly CartItem[]) => {
     cartRepository.saveItems(newItems);
   };
 
-  const addItem = (item: Omit<CartItem, "quantity">, quantity = 1) => {
-    const existingIndex = items.findIndex((i) => i.productId === item.productId);
-    let updated: CartItem[];
-
-    if (existingIndex > -1) {
-      updated = [...items];
-      updated[existingIndex].quantity += quantity;
-    } else {
-      updated = [...items, { ...item, quantity }];
+  const addItem = (productId: string, quantity = 1) => {
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+      return;
     }
-    updateAndSave(updated);
+
+    const currentItems = cartRepository.getItems();
+    const existingItem = currentItems.find((item) => item.productId === productId);
+    const nextQuantity = (existingItem?.quantity ?? 0) + quantity;
+    const product = findProductById(productId);
+
+    if (!product || !canPurchase(product, nextQuantity)) {
+      return;
+    }
+
+    const updatedItems = existingItem
+      ? currentItems.map((item) =>
+          item.productId === productId
+            ? { ...item, quantity: nextQuantity }
+            : item,
+        )
+      : [...currentItems, { productId, quantity }];
+
+    updateAndSave(updatedItems);
   };
 
   const removeItem = (productId: string) => {
-    updateAndSave(items.filter((i) => i.productId !== productId));
+    updateAndSave(cartRepository.getItems().filter((item) => item.productId !== productId));
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
+    if (!Number.isInteger(quantity)) {
+      return;
+    }
+
     if (quantity <= 0) {
       removeItem(productId);
       return;
     }
-    const updated = items.map((i) =>
-      i.productId === productId ? { ...i, quantity } : i
+
+    const product = findProductById(productId);
+
+    if (!product || !canPurchase(product, quantity)) {
+      return;
+    }
+
+    const updated = cartRepository.getItems().map((item) =>
+      item.productId === productId ? { ...item, quantity } : item,
     );
     updateAndSave(updated);
   };
 
   const clearCart = () => {
-    setItems([]);
     cartRepository.clear();
   };
 
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const count = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -72,8 +103,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         removeItem,
         updateQuantity,
         clearCart,
-        subtotal,
-        count
+        count,
       }}
     >
       {children}
@@ -81,4 +111,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export const useCart = () => useContext(CartContext);
+export function useCart(): CartContextData {
+  const context = useContext(CartContext);
+
+  if (!context) {
+    throw new Error("useCart deve ser utilizado dentro de CartProvider");
+  }
+
+  return context;
+}

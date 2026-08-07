@@ -60,14 +60,7 @@ export function ProductDetails({ slug }: ProductDetailsProps) {
           <strong className="product-price">{formatPrice(product.priceInCents)}</strong>
           <div className="product-actions">
             {available ? (
-              <AddToCartButton
-                product={{
-                  productId: product.id,
-                  name: product.title,
-                  price: product.priceInCents / 100,
-                  format: getProductTypeLabel(product.type),
-                }}
-              />
+              <AddToCartButton productId={product.id} />
             ) : (
               <button className="button button--primary" disabled type="button">
                 Produto esgotado

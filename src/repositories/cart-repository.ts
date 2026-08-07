@@ -1,21 +1,36 @@
-import { CartItem } from "@/entities/cart";
+import type { CartItem } from "@/entities/cart";
+import {
+  readStorageSnapshot,
+  readStorageValue,
+  subscribeToStorage,
+  writeStorageValue,
+} from "@/storage/local-storage";
 
-const CART_STORAGE_KEY = "compia_cart_items";
+const CART_STORAGE_KEY = "compia:v1:cart";
+const EMPTY_CART_SNAPSHOT = "[]";
 
 export const cartRepository = {
   getItems(): CartItem[] {
-    if (typeof window === "undefined") return [];
-    const data = localStorage.getItem(CART_STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+    return readStorageValue<CartItem[]>(CART_STORAGE_KEY) ?? [];
   },
 
-  saveItems(items: CartItem[]): void {
-    if (typeof window === "undefined") return;
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  saveItems(items: readonly CartItem[]): void {
+    writeStorageValue(CART_STORAGE_KEY, items);
   },
 
   clear(): void {
-    if (typeof window === "undefined") return;
-    localStorage.removeItem(CART_STORAGE_KEY);
-  }
+    writeStorageValue(CART_STORAGE_KEY, []);
+  },
+
+  getSnapshot(): string {
+    return readStorageSnapshot(CART_STORAGE_KEY, EMPTY_CART_SNAPSHOT);
+  },
+
+  getServerSnapshot(): string {
+    return EMPTY_CART_SNAPSHOT;
+  },
+
+  subscribe(onStoreChange: () => void): () => void {
+    return subscribeToStorage(CART_STORAGE_KEY, onStoreChange);
+  },
 };
