@@ -6,7 +6,7 @@ import { hasStorageValue, writeStorageValue } from "@/storage/local-storage";
 
 export const CATALOG_STORAGE_KEYS = {
   products: "compia:v1:catalog:products",
-  categories: "compia:v1:catalog:categories",
+  categories: "compia:v2:catalog:categories",
   tags: "compia:v1:catalog:tags",
   digitalAssets: "compia:v1:catalog:digital-assets",
 } as const;
@@ -29,6 +29,24 @@ export const CATEGORY_SEED = [
     name: "Cibersegurança",
     slug: "ciberseguranca",
     description: "Criptografia, segurança aplicada e proteção de sistemas.",
+  },
+  {
+    id: "category-programming",
+    name: "Programação",
+    slug: "programacao",
+    description: "Linguagens, boas práticas e desenvolvimento de aplicações.",
+  },
+  {
+    id: "category-data-science",
+    name: "Ciência de dados",
+    slug: "ciencia-de-dados",
+    description: "Análise de dados, estatística e aprendizado de máquina.",
+  },
+  {
+    id: "category-other",
+    name: "Outros",
+    slug: "outros",
+    description: "Temas complementares de tecnologia e inovação.",
   },
 ] satisfies readonly Category[];
 
