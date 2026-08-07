@@ -10,7 +10,7 @@ export default function AdminLayout({ children }: Readonly<{ children: React.Rea
           <details className="admin-mobile-menu">
             <summary>Menu</summary>
             <nav>
-              <Link href="/admin">Visao geral</Link>
+              <Link href="/admin">Visão geral</Link>
               <Link href="/admin/produtos">Produtos</Link>
               <Link href="/admin/categorias">Categorias</Link>
               <Link href="/admin/pedidos">Pedidos</Link>

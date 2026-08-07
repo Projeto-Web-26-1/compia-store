@@ -36,6 +36,11 @@ export function ProductDetails({ slug }: ProductDetailsProps) {
 
   const category = categories.find((currentCategory) => currentCategory.id === product.categoryId);
   const available = isAvailable(product);
+  const coverStyle = product.imageUrl
+    ? {
+        backgroundImage: `linear-gradient(rgba(16, 27, 45, 0.18), rgba(16, 27, 45, 0.76)), url(${JSON.stringify(product.imageUrl)})`,
+      }
+    : undefined;
 
   return (
     <div className="container page-space">
@@ -47,7 +52,7 @@ export function ProductDetails({ slug }: ProductDetailsProps) {
         <span>{product.title}</span>
       </nav>
       <section className="product-detail">
-        <div className="product-detail__cover">
+        <div className="product-detail__cover" style={coverStyle}>
           <small>COMPIA</small>
           <strong>{product.title}</strong>
           <span>{getProductTypeLabel(product.type)}</span>

@@ -4,15 +4,20 @@ import { EmptyState } from "@/components/ui/empty-state";
 
 interface ProductGridProps {
   readonly products: readonly Product[];
+  readonly filtered?: boolean;
 }
 
-export function ProductGrid({ products }: ProductGridProps) {
+export function ProductGrid({ products, filtered = false }: ProductGridProps) {
   if (products.length === 0) {
     return (
       <EmptyState
         icon="◇"
-        title="Nenhum produto disponível"
-        description="O catálogo será atualizado em breve com novos títulos."
+        title={filtered ? "Nenhum produto encontrado" : "Nenhum produto disponível"}
+        description={
+          filtered
+            ? "Tente remover algum filtro ou buscar por outro termo."
+            : "O catálogo será atualizado em breve com novos títulos."
+        }
       />
     );
   }

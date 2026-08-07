@@ -2,6 +2,15 @@ import type { Product } from "@/entities/product";
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
+export function createProductSlug(title: string): string {
+  return title
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export const PRODUCT_VALIDATION_CODES = [
   "id_required",
   "title_required",

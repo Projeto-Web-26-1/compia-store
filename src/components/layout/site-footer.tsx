@@ -11,15 +11,14 @@ export function SiteFooter() {
         </div>
         <div>
           <h2>Explore</h2>
-          <Link href="/produtos">Catalogo</Link>
+          <Link href="/produtos">Catálogo</Link>
           <Link href="/minha-conta/downloads">Meus downloads</Link>
           <Link href="/minha-conta/pedidos">Meus pedidos</Link>
         </div>
         <div>
           <h2>Atendimento</h2>
           <a href="mailto:contato@compia.com.br">contato@compia.com.br</a>
-          <span>Segunda a sexta, 8h as 18h</span>
-          <Link href="/admin">Acesso administrativo</Link>
+          <span>Segunda a sexta, das 8h às 18h</span>
         </div>
       </div>
       <div className="container footer-bottom">
