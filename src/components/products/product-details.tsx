@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { isAvailable } from "@/domain/catalog/product-rules";
 import { EmptyState } from "@/components/ui/empty-state";
 import {
@@ -58,14 +59,20 @@ export function ProductDetails({ slug }: ProductDetailsProps) {
           <p className="product-description">{product.description}</p>
           <strong className="product-price">{formatPrice(product.priceInCents)}</strong>
           <div className="product-actions">
-            <button
-              className="button button--primary"
-              disabled
-              title="A integração com o carrinho será feita com o Dev 2"
-              type="button"
-            >
-              {available ? "Adicionar ao carrinho" : "Produto indisponível"}
-            </button>
+            {available ? (
+              <AddToCartButton
+                product={{
+                  productId: product.id,
+                  name: product.title,
+                  price: product.priceInCents / 100,
+                  format: getProductTypeLabel(product.type),
+                }}
+              />
+            ) : (
+              <button className="button button--primary" disabled type="button">
+                Produto esgotado
+              </button>
+            )}
             <span>{getAvailabilityLabel(product)}</span>
           </div>
         </div>
