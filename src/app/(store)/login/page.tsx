@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getUserStartPath } from "@/domain/auth/access-control";
+import { getPostLoginPath } from "@/domain/auth/access-control";
 import { sessionRepository } from "@/repositories/session-repository";
 import { authenticateUser } from "@/repositories/user-repository";
 
@@ -28,7 +28,8 @@ export default function LoginPage() {
       }
 
       sessionRepository.saveUser(user);
-      router.replace(getUserStartPath(user));
+      const requestedPath = new URLSearchParams(window.location.search).get("redirect");
+      router.replace(getPostLoginPath(user, requestedPath));
     } catch {
       setError("Não foi possível realizar o login neste navegador.");
     } finally {

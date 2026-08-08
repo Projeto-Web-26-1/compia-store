@@ -4,18 +4,23 @@ import { useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/hooks/use-session";
 
-export function AccountGuard({ children }: { readonly children: ReactNode }) {
+interface AccountGuardProps {
+  readonly children: ReactNode;
+  readonly loginPath?: string;
+}
+
+export function AccountGuard({ children, loginPath = "/login" }: AccountGuardProps) {
   const router = useRouter();
   const session = useSession();
   const role = session.status === "authenticated" ? session.user.role : null;
 
   useEffect(() => {
     if (session.status === "anonymous") {
-      router.replace("/login");
+      router.replace(loginPath);
     } else if (session.status === "authenticated" && role !== "customer") {
       router.replace("/admin");
     }
-  }, [role, router, session.status]);
+  }, [loginPath, role, router, session.status]);
 
   if (session.status !== "authenticated" || session.user.role !== "customer") {
     return (
