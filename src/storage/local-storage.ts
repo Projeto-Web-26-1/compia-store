@@ -43,6 +43,15 @@ export function writeStorageValue<T>(key: string, value: T): void {
   window.dispatchEvent(new CustomEvent(STORAGE_CHANGE_EVENT, { detail: { key } }));
 }
 
+export function removeStorageValue(key: string): void {
+  if (!canUseLocalStorage()) {
+    return;
+  }
+
+  window.localStorage.removeItem(key);
+  window.dispatchEvent(new CustomEvent(STORAGE_CHANGE_EVENT, { detail: { key } }));
+}
+
 export function subscribeToStorage(key: string, onStoreChange: () => void): () => void {
   if (!canUseLocalStorage()) {
     return () => undefined;

@@ -1,25 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { PageIntro } from "@/components/ui/page-intro";
-import { User } from "@/entities/user";
+import { useSession } from "@/hooks/use-session";
 
 export default function AccountPage() {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("compia_logged_user");
-    if (saved) {
-      setUser(JSON.parse(saved));
-    }
-  }, []);
+  const session = useSession();
+  const userName = session.status === "authenticated" ? session.user.name : "leitor";
 
   return (
     <>
       <PageIntro
-        eyebrow="Area do cliente"
-        title={`Ola, ${user ? user.name : "leitor"}`}
-        description="Acompanhe seus pedidos e materiais digitais em um so lugar."
+        eyebrow="Área do cliente"
+        title={`Olá, ${userName}`}
+        description="Acompanhe seus pedidos e materiais digitais em um só lugar."
       />
       <div className="metric-grid">
         <article>
@@ -30,7 +23,7 @@ export default function AccountPage() {
         <article>
           <span>Downloads</span>
           <strong>0</strong>
-          <small>Nenhum arquivo disponivel</small>
+          <small>Nenhum arquivo disponível</small>
         </article>
       </div>
     </>
