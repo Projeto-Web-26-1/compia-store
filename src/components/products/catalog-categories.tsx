@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCategories, useProducts } from "@/hooks/use-catalog";
 
-const CATEGORY_TONES = ["violet", "blue", "green"] as const;
+const CATEGORY_TONES = ["violet", "blue", "green", "orange", "rose", "cyan"] as const;
 
 export function CatalogCategories() {
   const categories = useCategories();
@@ -11,14 +11,15 @@ export function CatalogCategories() {
 
   return (
     <div className="topic-grid">
-      {categories.slice(0, 3).map((category, index) => {
+      {categories.map((category, index) => {
         const productCount = products.filter(
           (product) => product.active && product.categoryId === category.id,
         ).length;
+        const tone = CATEGORY_TONES[index % CATEGORY_TONES.length];
 
         return (
           <Link
-            className={`topic-card topic-card--${CATEGORY_TONES[index]}`}
+            className={`topic-card topic-card--${tone}`}
             href="/produtos"
             key={category.id}
           >

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCart } from "@/context/cart-context";
-import { canPurchase } from "@/domain/catalog/product-rules";
+import { canPurchase, controlsStock } from "@/domain/catalog/product-rules";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageIntro } from "@/components/ui/page-intro";
 import {
@@ -23,7 +23,10 @@ export default function CartPage() {
       subtotal + (product ? product.priceInCents * item.quantity : 0),
     0,
   );
-  const shippingInCents = items.length > 0 ? 1500 : 0;
+  const hasShippableProduct = cartLines.some(
+    ({ product }) => product && controlsStock(product),
+  );
+  const shippingInCents = hasShippableProduct ? 1500 : 0;
   const totalInCents = subtotalInCents + shippingInCents;
 
   if (items.length === 0) {
