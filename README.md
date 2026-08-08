@@ -81,7 +81,3 @@ npm run build
 5. Publique o projeto.
 
 Nao existem variaveis de ambiente obrigatorias nesta etapa. A persistencia local sera adicionada posteriormente e funcionara no navegador de cada usuario.
-
-## Estado atual
-
-As paginas possuem layout responsivo e conteudo demonstrativo. Botoes, formularios, carrinho, autenticacao e administracao de dados ainda nao executam operacoes; esses comportamentos pertencem as proximas etapas do projeto.

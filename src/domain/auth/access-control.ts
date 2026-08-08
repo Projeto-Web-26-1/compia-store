@@ -36,6 +36,23 @@ export function getUserStartPath(user: Pick<User, "role">): string {
   return canAccess(user, "view_admin") ? "/admin" : "/minha-conta";
 }
 
+export function getPostLoginPath(
+  user: Pick<User, "role">,
+  requestedPath: string | null,
+): string {
+  if (!requestedPath || !requestedPath.startsWith("/") || requestedPath.startsWith("//")) {
+    return getUserStartPath(user);
+  }
+
+  if (user.role === "customer") {
+    return requestedPath.startsWith("/minha-conta") || requestedPath.startsWith("/checkout")
+      ? requestedPath
+      : "/minha-conta";
+  }
+
+  return requestedPath.startsWith("/admin") ? requestedPath : "/admin";
+}
+
 export function getAdminRoutePermission(pathname: string): AccessPermission {
   if (pathname.startsWith("/admin/produtos") || pathname.startsWith("/admin/categorias")) {
     return "manage_catalog";
