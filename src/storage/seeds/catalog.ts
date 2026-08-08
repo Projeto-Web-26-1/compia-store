@@ -2,7 +2,11 @@ import type { Category } from "@/entities/category";
 import type { DigitalAsset } from "@/entities/digital-asset";
 import type { Product } from "@/entities/product";
 import type { Tag } from "@/entities/tag";
-import { hasStorageValue, writeStorageValue } from "@/storage/local-storage";
+import {
+  hasStorageValue,
+  readStorageValue,
+  writeStorageValue,
+} from "@/storage/local-storage";
 
 export const CATALOG_STORAGE_KEYS = {
   products: "compia:v1:catalog:products",
@@ -10,6 +14,9 @@ export const CATALOG_STORAGE_KEYS = {
   tags: "compia:v1:catalog:tags",
   digitalAssets: "compia:v1:catalog:digital-assets",
 } as const;
+
+const CATALOG_SEED_VERSION_KEY = "compia:catalog:seed-version";
+const CATALOG_SEED_VERSION = 2;
 
 export const CATEGORY_SEED = [
   {
@@ -156,6 +163,38 @@ export const PRODUCT_SEED = [
     createdAt: "2026-07-20T12:00:00.000Z",
     updatedAt: "2026-07-20T12:00:00.000Z",
   },
+  {
+    id: "product-modern-typescript",
+    slug: "programacao-moderna-com-typescript",
+    title: "Programação Moderna com TypeScript",
+    author: "Camila Rocha",
+    description:
+      "Conceitos, práticas e exemplos para desenvolver aplicações robustas com TypeScript.",
+    type: "physical_book",
+    priceInCents: 8290,
+    stock: 14,
+    categoryId: "category-programming",
+    tagIds: ["tag-practice"],
+    active: true,
+    createdAt: "2026-08-06T12:00:00.000Z",
+    updatedAt: "2026-08-06T12:00:00.000Z",
+  },
+  {
+    id: "product-data-science-practice",
+    slug: "ciencia-de-dados-na-pratica",
+    title: "Ciência de Dados na Prática",
+    author: "André Martins",
+    description:
+      "Uma jornada aplicada por análise, visualização e modelagem de dados para problemas reais.",
+    type: "physical_book",
+    priceInCents: 8690,
+    stock: 10,
+    categoryId: "category-data-science",
+    tagIds: ["tag-foundations", "tag-practice"],
+    active: true,
+    createdAt: "2026-08-07T12:00:00.000Z",
+    updatedAt: "2026-08-07T12:00:00.000Z",
+  },
 ] satisfies readonly Product[];
 
 export const DIGITAL_ASSET_SEED = [
@@ -182,16 +221,43 @@ const CATALOG_SECTIONS = [
   [CATALOG_STORAGE_KEYS.digitalAssets, DIGITAL_ASSET_SEED],
 ] as const;
 
+function migrateProductSeed(): void {
+  const currentVersion = readStorageValue<number>(CATALOG_SEED_VERSION_KEY) ?? 0;
+
+  if (currentVersion >= CATALOG_SEED_VERSION) {
+    return;
+  }
+
+  const storedProducts = readStorageValue<Product[]>(CATALOG_STORAGE_KEYS.products) ?? [];
+  const storedProductIds = new Set(storedProducts.map((product) => product.id));
+  const missingProducts = PRODUCT_SEED.filter(
+    (product) => !storedProductIds.has(product.id),
+  );
+
+  if (missingProducts.length > 0) {
+    writeStorageValue(CATALOG_STORAGE_KEYS.products, [
+      ...storedProducts,
+      ...missingProducts,
+    ]);
+  }
+
+  writeStorageValue(CATALOG_SEED_VERSION_KEY, CATALOG_SEED_VERSION);
+}
+
 export function initializeCatalogSeed(): void {
   for (const [key, values] of CATALOG_SECTIONS) {
     if (!hasStorageValue(key)) {
       writeStorageValue(key, values);
     }
   }
+
+  migrateProductSeed();
 }
 
 export function resetCatalogSeed(): void {
   for (const [key, values] of CATALOG_SECTIONS) {
     writeStorageValue(key, values);
   }
+
+  writeStorageValue(CATALOG_SEED_VERSION_KEY, CATALOG_SEED_VERSION);
 }
