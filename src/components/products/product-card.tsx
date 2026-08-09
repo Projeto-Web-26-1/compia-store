@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import type { Product } from "@/entities/product";
 import {
   formatPrice,
@@ -15,17 +16,26 @@ export function ProductCard({ product, index }: ProductCardProps) {
   const href = `/produtos/${product.slug}`;
   const coverTone = (index % 3) + 1;
   const coverStyle = product.imageUrl
-    ? {
-        backgroundImage: `linear-gradient(rgba(16, 27, 45, 0.22), rgba(16, 27, 45, 0.74)), url(${JSON.stringify(product.imageUrl)})`,
-      }
+    ? ({
+        "--cover-image": `url(${JSON.stringify(product.imageUrl)})`,
+      } as CSSProperties)
     : undefined;
 
   return (
     <article className="product-card">
-      <Link className={`product-card__cover cover--${coverTone}`} href={href} style={coverStyle}>
-        <small>COMPIA</small>
-        <strong>{product.title}</strong>
-        <span>{product.author ?? "COMPIA Editora"}</span>
+      <Link
+        aria-label={`Ver ${product.title}`}
+        className={`product-card__cover cover--${coverTone}${product.imageUrl ? " product-card__cover--image" : ""}`}
+        href={href}
+        style={coverStyle}
+      >
+        {!product.imageUrl && (
+          <>
+            <small>COMPIA</small>
+            <strong>{product.title}</strong>
+            <span>{product.author ?? "COMPIA Editora"}</span>
+          </>
+        )}
       </Link>
       <div className="product-card__body">
         <span className="tag">{getProductTypeLabel(product.type)}</span>

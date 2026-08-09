@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { getProductTypeLabel } from "@/components/products/product-presentation";
 import type { DigitalAsset } from "@/entities/digital-asset";
@@ -9,6 +10,7 @@ import { useOrders } from "@/hooks/use-orders";
 import { useSession } from "@/hooks/use-session";
 
 export function CustomerDownloads() {
+  const [requestedAssetId, setRequestedAssetId] = useState<string | null>(null);
   const session = useSession();
   const orders = useOrders();
   const products = useProducts();
@@ -59,16 +61,20 @@ export function CustomerDownloads() {
           </h3>
           <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: "10px" }}>
             {assetsByProduct[product.id].map((asset) => (
-              <a
+              <button
                 key={asset.id}
                 className="button button--secondary button--full"
-                href={asset.downloadUrl}
-                rel="noopener noreferrer"
-                target="_blank"
+                onClick={() => setRequestedAssetId(asset.id)}
+                type="button"
               >
                 Baixar {asset.format.toLocaleUpperCase("pt-BR")}
-              </a>
+              </button>
             ))}
+            {assetsByProduct[product.id].some((asset) => asset.id === requestedAssetId) && (
+              <p className="download-feedback" role="status">
+                Seu download será iniciado em instantes.
+              </p>
+            )}
           </div>
         </article>
       ))}

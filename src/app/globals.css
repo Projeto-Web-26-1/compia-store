@@ -577,6 +577,14 @@ p {
 
 .benefit-card h3 { margin: 42px 0 12px; font-size: 20px; }
 .benefit-card p { margin-bottom: 0; color: var(--ink-soft); }
+.benefit-card .download-feedback {
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: #edf7f2;
+  color: #24654f;
+  font-size: 13px;
+  text-align: center;
+}
 
 .newsletter {
   display: grid;
@@ -778,6 +786,19 @@ p {
 .cover--1 { background: linear-gradient(145deg, #4d57dd, #202969); }
 .cover--2 { background: linear-gradient(145deg, #18787a, #0a3848); }
 .cover--3 { background: linear-gradient(145deg, #b2513f, #562536); }
+.product-card__cover--image { position: relative; isolation: isolate; overflow: hidden; background: #0b2a3a; }
+.product-card__cover--image::before,
+.product-card__cover--image::after { position: absolute; content: ""; inset: 0; }
+.product-card__cover--image::before {
+  background: var(--cover-image) center / cover no-repeat;
+  filter: blur(16px);
+  opacity: .42;
+  transform: scale(1.12);
+}
+.product-card__cover--image::after {
+  background: var(--cover-image) center / contain no-repeat;
+  filter: drop-shadow(0 8px 12px rgba(3, 15, 25, .38));
+}
 .product-card__cover small { font-weight: 850; letter-spacing: .13em; }
 .product-card__cover strong { max-width: 240px; margin-top: auto; font-size: 27px; line-height: 1.05; text-transform: capitalize; }
 .product-card__cover span { margin-top: 10px; color: rgba(255,255,255,.7); font-size: 12px; }
@@ -794,6 +815,7 @@ p {
 .breadcrumb a:hover { color: var(--brand); }
 .product-detail { display: grid; grid-template-columns: .8fr 1.2fr; gap: 75px; align-items: center; }
 .product-detail__cover { display: flex; min-height: 520px; flex-direction: column; padding: 42px; border-radius: var(--radius-md); background: linear-gradient(145deg, #4d57dd, #202969); background-position: center; background-size: cover; color: white; box-shadow: var(--shadow); }
+.product-detail__cover--image { background-color: #f5f7fa; background-repeat: no-repeat; background-size: contain; }
 .product-detail__cover small { font-weight: 850; letter-spacing: .13em; }
 .product-detail__cover strong { max-width: 350px; margin-top: auto; font-size: 42px; line-height: 1; text-transform: capitalize; }
 .product-detail__cover span { margin-top: 14px; color: #cbd0ff; }
@@ -908,6 +930,29 @@ p {
 .table-actions a,
 .table-actions button { border: 0; background: transparent; color: var(--brand); font-size: 12px; font-weight: 800; }
 .table-actions button { color: #a33b3b; }
+.customer-order-cards { display: none; }
+.customer-order-card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: white;
+}
+.customer-order-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.customer-order-card header > strong { font-size: 14px; }
+.customer-order-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-block: 20px;
+  gap: 14px;
+}
+.customer-order-card dl > div { display: grid; gap: 4px; }
+.customer-order-card dt { color: var(--ink-soft); font-size: 11px; }
+.customer-order-card dd { margin: 0; font-size: 14px; font-weight: 800; }
 
 .product-form { display: grid; gap: 20px; }
 .form-section { padding: 28px; border: 1px solid var(--line); border-radius: var(--radius-md); background: white; }
@@ -1058,6 +1103,8 @@ p {
   .section-nav nav a { min-width: max-content; }
   .section-nav__exit { display: none; }
   .metric-grid { grid-template-columns: 1fr; }
+  .customer-orders-table { display: none; }
+  .customer-order-cards { display: grid; gap: 14px; }
   .admin-shell { display: block; }
   .admin-sidebar { display: none; }
   .admin-topbar { min-height: 66px; justify-content: space-between; padding: 0 16px; }

@@ -2,6 +2,7 @@ import { isUser, type User } from "@/entities/user";
 import {
   hasStorageValue,
   readStorageValue,
+  subscribeToStorage,
   writeStorageValue,
 } from "@/storage/local-storage";
 
@@ -42,6 +43,11 @@ const USER_ACCOUNT_SEED = [
   },
 ] satisfies readonly UserAccount[];
 
+const CUSTOMER_SEED = USER_ACCOUNT_SEED
+  .map((account) => account.user)
+  .filter((user) => user.role === "customer");
+const CUSTOMER_SEED_SNAPSHOT = JSON.stringify(CUSTOMER_SEED);
+
 export type RegisterCustomerResult =
   | { readonly ok: true; readonly user: User }
   | { readonly ok: false; readonly reason: "email_in_use" | "invalid_data" };
@@ -74,6 +80,25 @@ function listAccounts(): readonly UserAccount[] {
   }
 
   return storedAccounts;
+}
+
+export function listCustomers(): readonly User[] {
+  return listAccounts()
+    .map((account) => account.user)
+    .filter((user) => user.role === "customer");
+}
+
+export function getCustomersSnapshot(): string {
+  return JSON.stringify(listCustomers());
+}
+
+export function getCustomersServerSnapshot(): string {
+  return CUSTOMER_SEED_SNAPSHOT;
+}
+
+export function subscribeToCustomers(onStoreChange: () => void): () => void {
+  initializeUserSeed();
+  return subscribeToStorage(USER_STORAGE_KEY, onStoreChange);
 }
 
 async function hashPassword(email: string, password: string): Promise<string> {

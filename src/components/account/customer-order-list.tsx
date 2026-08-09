@@ -40,26 +40,29 @@ export function CustomerOrderList() {
     );
   }
 
-  return (
-    <div className="admin-panel admin-table-wrap">
-      <table className="admin-table">
-        <thead>
-          <tr>
-            <th>Pedido</th>
-            <th>Data</th>
-            <th>Status</th>
-            <th>Total</th>
-            <th>
-              <span className="sr-only">Ações</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {userOrders.map((order) => {
-            const displayId = order.id.replace("order-", "").slice(0, 8).toLocaleUpperCase("pt-BR");
-            const date = new Date(order.createdAt).toLocaleDateString("pt-BR");
+  const presentedOrders = userOrders.map((order) => ({
+    order,
+    displayId: order.id.replace("order-", "").slice(0, 8).toLocaleUpperCase("pt-BR"),
+    date: new Date(order.createdAt).toLocaleDateString("pt-BR"),
+  }));
 
-            return (
+  return (
+    <>
+      <div className="admin-panel admin-table-wrap customer-orders-table">
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>Pedido</th>
+              <th>Data</th>
+              <th>Status</th>
+              <th>Total</th>
+              <th>
+                <span className="sr-only">Ações</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {presentedOrders.map(({ order, displayId, date }) => (
               <tr key={order.id}>
                 <td>
                   <strong>#{displayId}</strong>
@@ -75,10 +78,37 @@ export function CustomerOrderList() {
                   </div>
                 </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="customer-order-cards">
+        {presentedOrders.map(({ order, displayId, date }) => (
+          <article className="customer-order-card" key={order.id}>
+            <header>
+              <strong>Pedido #{displayId}</strong>
+              <span className="tag">{STATUS_LABELS[order.status] ?? order.status}</span>
+            </header>
+            <dl>
+              <div>
+                <dt>Data</dt>
+                <dd>{date}</dd>
+              </div>
+              <div>
+                <dt>Total</dt>
+                <dd>{formatPrice(order.totalInCents)}</dd>
+              </div>
+            </dl>
+            <Link
+              className="button button--secondary button--full"
+              href={`/minha-conta/pedidos/${order.id}`}
+            >
+              Ver detalhes
+            </Link>
+          </article>
+        ))}
+      </div>
+    </>
   );
 }
