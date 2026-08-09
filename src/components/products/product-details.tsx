@@ -38,7 +38,7 @@ export function ProductDetails({ slug }: ProductDetailsProps) {
   const available = isAvailable(product);
   const coverStyle = product.imageUrl
     ? {
-        backgroundImage: `linear-gradient(rgba(16, 27, 45, 0.18), rgba(16, 27, 45, 0.76)), url(${JSON.stringify(product.imageUrl)})`,
+        backgroundImage: `url(${JSON.stringify(product.imageUrl)})`,
       }
     : undefined;
 
@@ -52,10 +52,19 @@ export function ProductDetails({ slug }: ProductDetailsProps) {
         <span>{product.title}</span>
       </nav>
       <section className="product-detail">
-        <div className="product-detail__cover" style={coverStyle}>
-          <small>COMPIA</small>
-          <strong>{product.title}</strong>
-          <span>{getProductTypeLabel(product.type)}</span>
+        <div
+          aria-label={product.imageUrl ? `Capa do livro ${product.title}` : undefined}
+          className={`product-detail__cover${product.imageUrl ? " product-detail__cover--image" : ""}`}
+          role={product.imageUrl ? "img" : undefined}
+          style={coverStyle}
+        >
+          {!product.imageUrl && (
+            <>
+              <small>COMPIA</small>
+              <strong>{product.title}</strong>
+              <span>{getProductTypeLabel(product.type)}</span>
+            </>
+          )}
         </div>
         <div className="product-detail__content">
           <span className="tag">{category?.name ?? getProductTypeLabel(product.type)}</span>
