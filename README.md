@@ -1,6 +1,6 @@
 # COMPIA Editora
  
-Loja virtual demonstrativa para livros e materiais de inteligência artificial.
+Loja virtual demonstrativa para livros e materiais de inteligência artificial.  
 Hospedada em: https://compia-store-five.vercel.app/
  
 ## Stack utilizada
